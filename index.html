@@ -1,1 +1,465 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizzeria Il Giglio — Caltanissetta</title>
+<style>
+  :root{
+    --oven:#1a1109;
+    --oven-2:#241609;
+    --crust:#e8ae52;
+    --tomato:#c4432e;
+    --tomato-deep:#8f2a20;
+    --basil:#6b8a4f;
+    --cream:#f8efdd;
+    --cream-dim:#d9c6a3;
+    --ink:#251a10;
+    --focus:#e8ae52;
+    --gourmet-bg:#2a1c11;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{ margin:0; background:var(--oven); color:var(--cream); font-family:'Times New Roman', Times, serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  ::selection{ background:var(--tomato); color:var(--cream); }
+  a{ color:inherit; }
+  :focus-visible{ outline:2px solid var(--focus); outline-offset:3px; }
+  h1,h2,h3{ font-family:'Times New Roman', Times, serif; margin:0; }
+  .wrap{ max-width:1040px; margin:0 auto; padding:0 28px; }
 
+  /* NAV */
+  nav{ position:sticky; top:0; z-index:40; background:rgba(26,17,9,0.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(232,174,82,0.16); }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; padding:16px 28px; gap:18px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Times New Roman', Times, serif; font-weight:600; font-size:1.05rem; }
+  .brand img{ width:38px; height:38px; border-radius:50%; display:block; box-shadow:0 0 0 1px rgba(232,174,82,0.5), 0 2px 8px rgba(0,0,0,0.4); }
+  .brand-text{ display:flex; flex-direction:column; line-height:1.1; }
+  .brand-text .sub{ font-family:'Times New Roman', Times, serif; font-weight:400; font-size:0.62rem; letter-spacing:0.12em; color:var(--cream-dim); text-transform:uppercase; }
+  .hero-watermark{
+    position:absolute; top:-40px; left:50%; width:min(120vw,700px); height:min(120vw,700px);
+    transform:translateX(-50%); pointer-events:none;
+    filter:grayscale(1) brightness(2.6);
+    mix-blend-mode:screen; opacity:0.07;
+  }
+  .footer-mark{ display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:6px; }
+  .footer-mark img{ width:20px; height:20px; border-radius:50%; opacity:0.55; }
+  .navlinks{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .navlinks button{
+    font-family:'Times New Roman', Times, serif; font-size:0.88rem; font-weight:600;
+    background:transparent; border:1.5px solid #000; color:var(--cream-dim);
+    padding:8px 18px; border-radius:999px; cursor:pointer; transition:all .15s ease;
+  }
+  .navlinks button.active{ background:rgba(0,0,0,0.4); border-color:#000; color:var(--cream); }
+  .navlinks button:not(.active):hover{ border-color:#000; background:rgba(0,0,0,0.2); color:var(--cream); }
+  .navlinks a.contact-link{ align-self:center; font-size:0.85rem; color:var(--cream-dim); text-decoration:none; margin-left:4px; }
+  .navlinks a.contact-link:hover{ color:var(--crust); }
+  .btn-nav-cta{
+    background:var(--tomato); color:var(--cream); font-size:0.85rem; font-weight:600;
+    border:1.5px solid var(--tomato);
+    padding:8px 18px; border-radius:999px; text-decoration:none; white-space:nowrap;
+    transition:background .15s ease;
+  }
+  .btn-nav-cta:hover{ background:var(--tomato-deep); border-color:var(--tomato-deep); }
+
+  @media (max-width:520px){
+    nav .wrap{ padding:14px 18px; justify-content:center; text-align:center; }
+    .navlinks{ width:100%; justify-content:center; }
+    .navlinks button, .btn-nav-cta{ padding:7px 14px; font-size:0.82rem; }
+    .brand{ justify-content:center; }
+  }
+
+  /* HERO */
+  .hero{ position:relative; padding:88px 28px 56px; text-align:center; background:radial-gradient(ellipse 60% 45% at 50% 8%, rgba(232,174,82,0.16), transparent 65%), var(--oven); overflow:hidden; }
+  .hero-eyebrow{ color:var(--basil); font-size:0.82rem; letter-spacing:0.06em; margin-bottom:14px; }
+  .hero h1{ font-size:clamp(2.3rem, 6.4vw, 3.7rem); line-height:1.06; max-width:640px; margin:0 auto; }
+  .hero h1 em{ font-style:italic; color:var(--crust); font-weight:500; }
+  .hero p.sub{ max-width:440px; margin:20px auto 0; color:var(--cream-dim); font-size:1.02rem; line-height:1.6; }
+
+  .pizza-zone{ position:relative; margin:52px auto 4px; height:min(56vw, 340px); }
+  .pizza-glow{ position:absolute; left:50%; top:50%; width:min(90vw,460px); height:min(90vw,460px); transform:translate(-50%,-50%); background:radial-gradient(circle, rgba(232,174,82,0.22), transparent 68%); pointer-events:none; }
+  .pizza-stage{ position:relative; width:min(64vw,300px); aspect-ratio:1/1; margin:0 auto; perspective:1200px; }
+  .pizza-disc{ width:100%; height:100%; position:relative; transform-style:preserve-3d; transform:rotateX(66deg) rotateZ(0deg); will-change:transform; }
+  .pizza-face{ position:absolute; inset:0; border-radius:50%; backface-visibility:hidden; filter:drop-shadow(0 10px 14px rgba(0,0,0,0.55)); }
+  .pizza-face svg{ width:100%; height:100%; display:block; }
+  .pizza-rim{ position:absolute; inset:0; border-radius:50%; background:linear-gradient(155deg,#f0c06e 0%,#c9873a 55%,#8a591f 100%); transform:translateZ(-8px) scale(1.001); box-shadow:0 0 0 1px rgba(0,0,0,0.2) inset; }
+
+  .pizza-shadow{ width:min(48vw,230px); height:24px; margin:14px auto 0; border-radius:50%; background:radial-gradient(ellipse, rgba(0,0,0,0.6), transparent 72%); transition:opacity .15s linear; }
+  @media (prefers-reduced-motion: reduce){ .pizza-disc{ transform:rotateX(58deg) rotateZ(-16deg) !important; } }
+
+  .hero-cta{ margin-top:8px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .btn{ display:inline-block; padding:14px 28px; border-radius:999px; font-size:0.95rem; font-weight:600; text-decoration:none; transition:transform .15s ease, background .15s ease, border-color .15s ease; border:1px solid transparent; cursor:pointer; }
+  .btn-primary{ background:var(--tomato); color:var(--cream); }
+  .btn-primary:hover{ background:var(--tomato-deep); transform:translateY(-1px); }
+  .btn-ghost{ border-color:rgba(248,239,221,0.32); color:var(--cream); }
+  .btn-ghost:hover{ border-color:var(--crust); color:var(--crust); }
+
+  .info-strip{ border-top:1px solid rgba(232,174,82,0.16); border-bottom:1px solid rgba(232,174,82,0.16); padding:20px 0; }
+  .info-strip .wrap{ display:flex; gap:34px; flex-wrap:wrap; justify-content:center; font-size:0.87rem; color:var(--cream-dim); }
+  .info-strip strong{ color:var(--crust); font-weight:600; margin-right:4px; }
+
+  /* TAB SWITCHER */
+  .menu-switch-zone{ background:var(--cream); padding-top:48px; }
+  .menu-switch{ display:flex; justify-content:center; gap:14px; margin-bottom:8px; }
+  .switch-btn{
+    font-family:'Times New Roman', Times, serif; font-size:1.05rem; font-weight:600; color:#8a7a5a;
+    background:transparent; border:none; border-bottom:2px solid transparent;
+    padding:8px 4px; cursor:pointer; transition:all .15s ease;
+  }
+  .switch-btn.active{ color:var(--tomato); border-bottom-color:var(--tomato); }
+  .switch-btn:not(.active):hover{ color:var(--ink); }
+
+  .menu{ background:radial-gradient(ellipse 60% 30% at 50% 0%, rgba(196,67,46,0.05), transparent 70%), var(--cream); color:var(--ink); padding:0 0 44px; }
+  .tab-panel[hidden]{ display:none; }
+
+  .category{ margin-bottom:52px; scroll-margin-top:76px; }
+  .category-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:6px; }
+  .category h3{ font-size:1.4rem; color:var(--tomato); white-space:nowrap; }
+  .category-rule{ flex:1; height:1px; background:linear-gradient(90deg, rgba(196,67,46,0.5), transparent); }
+  .category .note{ font-size:0.82rem; color:#8a7a5a; margin:6px 0 20px; }
+
+  .dish-grid{ column-gap:44px; }
+  @media (min-width:720px){ .dish-grid.two-col{ column-count:2; } }
+  .dish{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding:12px 0; border-bottom:1px dotted rgba(37,26,16,0.18); break-inside:avoid; }
+  .dish:last-child{ border-bottom:none; }
+  .dish-name{ font-weight:600; font-size:1rem; }
+  .dish-ing{ display:block; font-weight:400; font-size:0.85rem; color:#6f6046; margin-top:2px; line-height:1.45; }
+  .dish-price{ font-family:'Times New Roman', Times, serif; font-weight:600; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .dish-price small{ font-size:0.72em; color:#8a7a5a; font-weight:400; }
+  .subgroup-title{ font-size:0.78rem; letter-spacing:0.05em; color:#8a7a5a; margin:20px 0 4px; }
+
+  /* GOURMET — pannello a parte */
+  .gourmet-panel{
+    background:var(--gourmet-bg); color:var(--cream);
+    border-radius:28px; padding:36px 28px; margin:56px 0;
+    box-shadow:0 12px 30px rgba(0,0,0,0.18);
+  }
+  .gourmet-panel .category-head h3{ color:var(--crust); }
+  .gourmet-panel .category-rule{ background:linear-gradient(90deg, rgba(232,174,82,0.55), transparent); }
+  .gourmet-panel .note{ color:var(--cream-dim); }
+  .gourmet-panel .dish{ border-bottom:1px dotted rgba(248,239,221,0.16); }
+  .gourmet-panel .dish-ing{ color:var(--cream-dim); }
+  .gourmet-panel .dish-price{ color:var(--crust); }
+  .gourmet-panel .dish-price small{ color:var(--cream-dim); }
+  .gourmet-panel .subgroup-title{ color:var(--crust); opacity:0.85; }
+  .gourmet-intro{ font-size:0.92rem; color:var(--cream-dim); max-width:520px; margin:10px 0 26px; line-height:1.6; }
+
+  /* RISTORANTE HEADER */
+  .ristorante-head{ text-align:center; padding:28px 0 8px; }
+  .ristorante-head .kicker{ color:var(--tomato); font-size:0.84rem; letter-spacing:0.05em; margin-bottom:10px; }
+  .ristorante-head h2{ font-size:clamp(1.9rem, 5vw, 2.5rem); }
+  .ristorante-head p{ max-width:480px; margin:14px auto 0; color:#6f6046; font-size:0.95rem; line-height:1.6; }
+
+  .menu-head{ text-align:center; margin-bottom:12px; padding-top:8px; }
+  .menu-head .kicker{ color:var(--tomato); font-size:0.84rem; letter-spacing:0.05em; margin-bottom:10px; }
+  .menu-head h2{ font-size:clamp(1.9rem, 5vw, 2.5rem); }
+  .menu-body{ padding-top:44px; }
+
+  .contact{ background:var(--oven-2); padding:64px 0; text-align:center; }
+  .contact h2{ color:var(--cream); font-size:clamp(1.7rem,4.5vw,2.2rem); margin-bottom:16px; }
+  .contact p{ color:var(--cream-dim); max-width:440px; margin:0 auto; line-height:1.65; }
+  .contact-details{ display:flex; gap:36px; justify-content:center; flex-wrap:wrap; margin-top:32px; font-size:0.95rem; }
+  .contact-details div{ color:var(--cream-dim); }
+  .contact-details strong{ display:block; color:var(--crust); font-family:'Times New Roman', Times, serif; font-size:1.05rem; margin-bottom:5px; font-weight:600; }
+  .contact-details a{ text-decoration:none; }
+  .contact-details a:hover{ color:var(--crust); }
+
+  footer{ text-align:center; padding:24px; font-size:0.78rem; color:rgba(248,239,221,0.38); background:var(--oven); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">
+      <img src="assets/logo.png" alt="Stemma Pizzeria Il Giglio" width="38" height="38">
+      <div class="brand-text">Il Giglio<span class="sub">Pizzeria &amp; Ristorante</span></div>
+    </div>
+    <div class="navlinks">
+      <button class="tab-btn active" data-target="pizzeria">Menu Pizzeria</button>
+      <button class="tab-btn" data-target="ristorante">Menu Ristorante</button>
+      <a class="contact-link" href="#contatti">Contatti</a>
+      <a class="btn-nav-cta" href="https://programsupport14.github.io/Praesto/?p=giglio" target="_blank" rel="noopener">Prenota online</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <img class="hero-watermark" src="assets/logo.png" alt="" aria-hidden="true">
+  <div class="hero-eyebrow">Via F. Paladini, 63 — Caltanissetta</div>
+  <h1>Pizza vera, <em>forno vero.</em></h1>
+  <p class="sub">Impasto lievitato, ingredienti scelti e una lista infinita di gusti — dalla Margherita alle Gourmet al pistacchio. Ordini a partire dalle 17:00.</p>
+
+  <div class="pizza-zone">
+    <div class="pizza-glow"></div>
+    <div class="pizza-stage">
+      <div class="pizza-disc" id="pizzaDisc">
+        <div class="pizza-rim"></div>
+        <div class="pizza-face" style="transform:translateZ(8px)"><img src="assets/pizza.png" alt="Pizza" style="width:100%;height:100%;object-fit:contain;display:block;"></div>
+        <div class="pizza-face" style="transform:translateZ(-8px) rotateY(180deg)"><img src="assets/pizza.png" alt="" style="width:100%;height:100%;object-fit:contain;display:block;filter:brightness(0.75);"></div>
+      </div>
+    </div>
+    <div class="pizza-shadow" id="pizzaShadow"></div>
+  </div>
+
+  <div class="hero-cta">
+    <button class="btn btn-primary" data-goto="pizzeria">Guarda il menu</button>
+    <a class="btn btn-primary" href="https://programsupport14.github.io/Praesto/?p=giglio" target="_blank" rel="noopener">Prenota online</a>
+    <a class="btn btn-ghost" href="tel:3295745714">Chiama 329 574 5714</a>
+  </div>
+</header>
+
+<div class="info-strip">
+  <div class="wrap">
+    <div><strong>Orari ordini</strong>dalle 17:00</div>
+    <div><strong>Dove</strong><a href="https://www.google.com/maps/search/?api=1&query=Via+F.+Paladini%2C+63%2C+Caltanissetta" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Via F. Paladini, 63, Caltanissetta</a></div>
+    <div><strong>Prenotazioni</strong>329 574 5714</div>
+  </div>
+</div>
+
+<div style="line-height:0;">
+  <svg viewBox="0 0 1440 90" preserveAspectRatio="none" style="width:100%; height:70px; display:block;">
+    <path d="M0,40 C 240,90 480,0 720,30 C 960,60 1200,10 1440,45 L1440,90 L0,90 Z" fill="#f8efdd"></path>
+  </svg>
+</div>
+<div class="menu-switch-zone">
+  <div class="wrap">
+    <div class="menu-switch">
+      <button class="switch-btn active" data-target="pizzeria">Menu Pizzeria</button>
+      <button class="switch-btn" data-target="ristorante">Menu Ristorante</button>
+    </div>
+  </div>
+</div>
+
+<main class="menu">
+  <div class="wrap">
+
+    <!-- ===================== MENU PIZZERIA ===================== -->
+    <div class="tab-panel" id="tab-pizzeria">
+      <div class="menu-body">
+
+        <div class="menu-head">
+          <div class="kicker">Il forno</div>
+          <h2>Le nostre pizze</h2>
+        </div>
+
+        <section class="category" id="pizze">
+          <div class="category-head"><h3>Pizze classiche</h3><div class="category-rule"></div></div>
+                    <div class="dish-grid two-col">
+            <div class="dish"><div><span class="dish-name">Margherita</span><span class="dish-ing">Pomodoro, mozzarella, origano, basilico</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Napoletana</span><span class="dish-ing">Pomodoro, mozzarella, acciughe, olive, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Capricciosa</span><span class="dish-ing">Pomodoro, mozzarella, funghi, prosciutto cotto, piselli, uovo, olive, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Quattro Stagioni</span><span class="dish-ing">Pomodoro, mozzarella, prosciutto cotto, carciofi, funghi, acciughe, olive, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Quattro Formaggi</span><span class="dish-ing">Mozzarella, gorgonzola, svizzero, grana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Cinque Formaggi</span><span class="dish-ing">Mozzarella, gorgonzola, svizzero, grana, mascarpone, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Carbonara</span><span class="dish-ing">Pomodoro, mozzarella, pancetta, uovo sbattuto, grana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Siciliana</span><span class="dish-ing">Pomodoro, acciughe, cipolla, olive, scaglie di grana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Norma</span><span class="dish-ing">Pomodoro, mozzarella, melanzane, ricotta salata, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Vulcano</span><span class="dish-ing">Pomodoro, mozzarella, salame piccante, gorgonzola, peperoni, peperoncino, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">U.S.A.</span><span class="dish-ing">Pomodoro, mozzarella, salsiccia, salame piccante, peperoni, cipolla, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">San Daniele</span><span class="dish-ing">Pomodoro, mozzarella, prosciutto crudo, scaglie di grana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Rucola</span><span class="dish-ing">Pomodoro, mozzarella, prosciutto crudo, rucola, scaglie di grana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Tonnata</span><span class="dish-ing">Pomodoro, mozzarella, tonno, cipolla, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Vegetariana</span><span class="dish-ing">Pomodoro, mozzarella, spinaci, funghi, melanzane, piselli, zucchine, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Parmigiana</span><span class="dish-ing">Pomodoro, mozzarella, melanzane, uovo, grana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Caprese</span><span class="dish-ing">Pomodoro, mozzarella a fette, scaglie di grana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Al Pesto</span><span class="dish-ing">Pomodoro, mozzarella, pesto genovese, ciliegino, scaglie di grana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Affumicata</span><span class="dish-ing">Pomodoro, mozzarella, pancetta affumicata, scamorza, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Americana</span><span class="dish-ing">Pomodoro, mozzarella, wurstel, patatine, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Mc Cain</span><span class="dish-ing">Pomodoro, mozzarella, patatine, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Messicana</span><span class="dish-ing">Pomodoro, mozzarella, salame piccante, funghi, salsa messicana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Caciocavallo</span><span class="dish-ing">Pomodoro, mozzarella, melanzane, uovo, prosciutto cotto, caciocavallo, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Deliziosa</span><span class="dish-ing">Pomodoro, mozzarella, funghi, prosciutto cotto, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">F 40</span><span class="dish-ing">Pomodoro, mozzarella, scamorza, zucchine grigliate, funghi freschi, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Gianni</span><span class="dish-ing">Pomodoro, mozzarella, melanzane, cipolla, peperoni, funghi, scaglie di grana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Giglio 2</span><span class="dish-ing">Pomodoro, mozzarella, ciliegino, prosciutto crudo, rucola, scaglie, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Stefy e Sofy</span><span class="dish-ing">Pomodoro, mozzarella, prosciutto cotto, melanzane, wurstel, uovo, scaglie di grana, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Junnes</span><span class="dish-ing">Pomodoro, mozzarella, melanzane, zucchine, peperoni, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Peppa Pig</span><span class="dish-ing">Pomodoro, mozzarella, prosciutto cotto, patatine, wurstel, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Primo Sale</span><span class="dish-ing">Pomodoro, mozzarella, tuma, salsiccia, scamorza, cipolla, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Sfiziosa</span><span class="dish-ing">Pomodoro, mozzarella, speck, mascarpone, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+            <div class="dish"><div><span class="dish-name">Toast</span><span class="dish-ing">Mozzarella, prosciutto, sottiletta, origano</span></div><div class="dish-price">7 <small>/ 14</small></div></div>
+          </div>
+        </section>
+
+        <div class="gourmet-panel" id="gourmet">
+          <div class="category-head"><h3>Pizze Gourmet</h3><div class="category-rule"></div></div>
+          <p class="gourmet-intro">La nostra selezione con ingredienti più ricercati — mozzarella di bufala, pesto di pistacchio, salmone affumicato.</p>
+          <div class="note">€9,00 normale · €18,00 famiglia, salvo dove indicato</div>
+          <div class="dish-grid two-col">
+            <div class="dish"><div><span class="dish-name">Giglio</span><span class="dish-ing">Pomodoro, mozzarella, ciliegino, prosciutto crudo, philadelphia, scaglie di grana, rucola, mozzarella a fette, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Ai Porcini</span><span class="dish-ing">Mozzarella di bufala, porcini, scaglie di grana, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Al Pistacchio</span><span class="dish-ing">Mozzarella di bufala, pancetta, pesto di pistacchio, granella di pistacchio, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Al Salmone</span><span class="dish-ing">Mozzarella di bufala, salmone affumicato, pesto di pistacchio, granella di pistacchio, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Assortita</span><span class="dish-ing">Pomodoro, mozzarella, funghi, tonno, wurstel, prosciutto cotto, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Bresaola</span><span class="dish-ing">Pomodoro, mozzarella, bresaola, rucola, ciliegino, scaglie di grana, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Golosa</span><span class="dish-ing">Mozzarella di bufala, mortadella, mascarpone, pesto di pistacchio, granella di pistacchio, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Good</span><span class="dish-ing">Pomodoro, mozzarella, svizzero, funghi, ciliegino, prosciutto crudo, rucola, scaglie di grana, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">La Mariesca</span><span class="dish-ing">Pomodoro, mozzarella, melanzane, patate al forno, prosciutto cotto, ricotta salata, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Pizza Cocktail</span><span class="dish-ing">Mozzarella di bufala, gamberetti, rucola, salsa rosa, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Ponzio Pilato</span><span class="dish-ing">Pomodoro, mozzarella, patatine, piselli, salsiccia, rucola, mascarpone, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Primavera</span><span class="dish-ing">Mozzarella, pomodoro a fette, bocconcini di mozzarella, olio, sale, origano</span></div><div class="dish-price">9 <small>/ 18</small></div></div>
+            <div class="dish"><div><span class="dish-name">Frutti di Mare</span><span class="dish-ing">Pomodoro, mozzarella, fritto misto, origano — solo il venerdì</span></div><div class="dish-price">12 <small>/ 24</small></div></div>
+          </div>
+          <div class="subgroup-title">Le nostre "Bombazze" — con contorno di insalata</div>
+          <div class="dish-grid two-col">
+            <div class="dish"><div><span class="dish-name">Al Salmone</span><span class="dish-ing">Mozzarella di bufala, pesto di pistacchio, aceto balsamico, granella di pistacchio, origano</span></div><div class="dish-price">10</div></div>
+            <div class="dish"><div><span class="dish-name">Ai 4 Formaggi</span><span class="dish-ing">Mozzarella di bufala, svizzero, scaglie, pioggia di grana, miele, origano</span></div><div class="dish-price">10</div></div>
+            <div class="dish"><div><span class="dish-name">A Burrata</span><span class="dish-ing">Burrata, pancetta affumicata, noci, svizzero, aceto balsamico, granella di pistacchio, origano</span></div><div class="dish-price">12</div></div>
+          </div>
+        </div>
+
+        <section class="category" id="panpizza">
+          <div class="category-head"><h3>I nostri Pan Pizza</h3><div class="category-rule"></div></div>
+          <div class="note">Con contorno di insalata o patatine</div>
+          <div class="dish"><div><span class="dish-name">Rustico</span><span class="dish-ing">Olio, acciughe, grana o pecorino</span></div><div class="dish-price">7</div></div>
+          <div class="dish"><div><span class="dish-name">Bresaola</span><span class="dish-ing">Bresaola, ciliegino, rucola, bufala, scaglie</span></div><div class="dish-price">8</div></div>
+          <div class="dish"><div><span class="dish-name">4 Formaggi</span><span class="dish-ing">Gorgonzola, svizzero, grana, mozzarella, mascarpone</span></div><div class="dish-price">7</div></div>
+          <div class="dish"><div><span class="dish-name">San Daniele</span><span class="dish-ing">Prosciutto crudo, rucola, scaglie, mozzarella a fette</span></div><div class="dish-price">7</div></div>
+        </section>
+
+        <section class="category" id="dolci">
+          <div class="category-head"><h3>Pizze Dolci</h3><div class="category-rule"></div></div>
+                    <div class="dish"><div><span class="dish-name">Pistacchio</span><span class="dish-ing">Nutella, granella di pistacchio</span></div><div class="dish-price">6</div></div>
+          <div class="dish"><div><span class="dish-name">Nutella</span></div><div class="dish-price">6</div></div>
+          <div class="dish"><div><span class="dish-name">Nocciolata</span><span class="dish-ing">Nutella, granella di nocciola</span></div><div class="dish-price">6</div></div>
+          <div class="dish"><div><span class="dish-name">Cocco</span><span class="dish-ing">Nutella, granella di cocco</span></div><div class="dish-price">6</div></div>
+          <div class="dish"><div><span class="dish-name">Kinder</span><span class="dish-ing">Nutella, mascarpone, granella di nocciola</span></div><div class="dish-price">6</div></div>
+        </section>
+
+        <section class="category" id="fritture">
+          <div class="category-head"><h3>Fritture</h3><div class="category-rule"></div></div>
+          <div class="dish"><div><span class="dish-name">Patatine</span><span class="dish-ing">Piccola / media / grande</span></div><div class="dish-price">2 / 3 / 5</div></div>
+          <div class="dish"><div><span class="dish-name">Crocchette, patatine, panelle</span><span class="dish-ing">Misto piccolo / medio / grande</span></div><div class="dish-price">4 / 6 / 8</div></div>
+        </section>
+
+        <section class="category" id="bibite">
+          <div class="category-head"><h3>Bibite</h3><div class="category-rule"></div></div>
+          <div class="dish"><div><span class="dish-name">Acqua</span><span class="dish-ing">50 cl / 1 lt</span></div><div class="dish-price">1 / 2</div></div>
+          <div class="dish"><div><span class="dish-name">Coca Cola, Aranciata</span><span class="dish-ing">Bottiglia da 1 lt</span></div><div class="dish-price">3,50</div></div>
+          <div class="dish"><div><span class="dish-name">Lattine</span></div><div class="dish-price">2</div></div>
+          <div class="dish"><div><span class="dish-name">Birra Heineken / Moretti</span><span class="dish-ing">33 cl / 66 cl</span></div><div class="dish-price">2,50 / 4</div></div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ===================== MENU RISTORANTE ===================== -->
+    <div class="tab-panel" id="tab-ristorante" hidden>
+      <div class="menu-body">
+
+        <div class="ristorante-head">
+          <div class="kicker">La sala</div>
+          <h2>Menu Ristorante</h2>
+          <p>Antipasti, primi e secondi della cucina — anche da asporto, separati dal menu delle pizze.</p>
+        </div>
+
+        <section class="category" id="antipasti">
+          <div class="category-head"><h3>Antipasti</h3><div class="category-rule"></div></div>
+          <div class="subgroup-title">Insalate</div>
+          <div class="dish"><div><span class="dish-name">Insalata verde</span><span class="dish-ing">Iceberg</span></div><div class="dish-price">3</div></div>
+          <div class="dish"><div><span class="dish-name">Insalata mista</span><span class="dish-ing">Iceberg, pomodoro</span></div><div class="dish-price">3</div></div>
+          <div class="dish"><div><span class="dish-name">Caprese</span><span class="dish-ing">Pomodoro rosso, mozzarella a fette, origano, basilico</span></div><div class="dish-price">4</div></div>
+          <div class="dish"><div><span class="dish-name">Verdure grigliate</span><span class="dish-ing">Zucchine, melanzane, peperoni</span></div><div class="dish-price">5</div></div>
+          <div class="subgroup-title">Fritti e taglieri</div>
+          <div class="dish"><div><span class="dish-name">Patatine</span><span class="dish-ing">Piccola / media / grande</span></div><div class="dish-price">2 / 3 / 5</div></div>
+          <div class="dish"><div><span class="dish-name">Fritto misto — patatine, crocchette, panelle</span><span class="dish-ing">Piccola / media / grande</span></div><div class="dish-price">4 / 6 / 8</div></div>
+          <div class="dish"><div><span class="dish-name">Tagliere di salumi e formaggi</span><span class="dish-ing">2 / 3 / 4 persone</span></div><div class="dish-price">4 / 6 / 8</div></div>
+        </section>
+
+        <section class="category" id="primi">
+          <div class="category-head"><h3>Primi Piatti</h3><div class="category-rule"></div></div>
+          <div class="dish"><div><span class="dish-name">Spaghetti aglio, olio e peperoncino</span></div><div class="dish-price">5</div></div>
+          <div class="dish"><div><span class="dish-name">Spaghetti al pomodoro</span></div><div class="dish-price">5</div></div>
+          <div class="dish"><div><span class="dish-name">Penne rigate al pesto genovese</span></div><div class="dish-price">6</div></div>
+          <div class="dish"><div><span class="dish-name">Penne rigate ai funghi</span></div><div class="dish-price">6</div></div>
+          <div class="dish"><div><span class="dish-name">Cavati alla Norma</span></div><div class="dish-price">7</div></div>
+          <div class="dish"><div><span class="dish-name">Gnocchi al gorgonzola</span></div><div class="dish-price">7</div></div>
+          <div class="dish"><div><span class="dish-name">Tagliatelle al pistacchio</span><span class="dish-ing">Con burrata o bufala</span></div><div class="dish-price">9</div></div>
+          <div class="dish"><div><span class="dish-name">Spaghetti alla carbonara</span><span class="dish-ing">La vera carbonara</span></div><div class="dish-price">9</div></div>
+        </section>
+
+        <section class="category" id="secondi">
+          <div class="category-head"><h3>Secondi Piatti</h3><div class="category-rule"></div></div>
+          <div class="dish"><div><span class="dish-name">Salsiccia grigliata</span></div><div class="dish-price">5</div></div>
+          <div class="dish"><div><span class="dish-name">Costata di maiale</span></div><div class="dish-price">5</div></div>
+          <div class="dish"><div><span class="dish-name">Grigliata di carne</span><span class="dish-ing">Con contorno di insalata mista</span></div><div class="dish-price">10</div></div>
+        </section>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div style="line-height:0;">
+  <svg viewBox="0 0 1440 90" preserveAspectRatio="none" style="width:100%; height:70px; display:block;">
+    <path d="M0,50 C 240,0 480,90 720,55 C 960,20 1200,70 1440,35 L1440,90 L0,90 Z" fill="#241609"></path>
+  </svg>
+</div>
+<section class="contact" id="contatti">
+  <div class="wrap">
+    <h2>Ti aspettiamo al Giglio</h2>
+    <p>Per gruppi numerosi o per essere sicuri del tuo orario di ritiro, chiamaci prima: durante il rush il forno lavora a pieno regime.</p>
+    <div class="contact-details">
+      <div><strong>Indirizzo</strong><a href="https://www.google.com/maps/search/?api=1&query=Via+F.+Paladini%2C+63%2C+Caltanissetta" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Via F. Paladini, 63<br>Caltanissetta</a></div>
+      <div><strong>Telefono</strong><a href="tel:3295745714">329 574 5714</a></div>
+      <div><strong>Ordini</strong>A partire dalle 17:00</div>
+    </div>
+    <div class="hero-cta" style="margin-top:32px;">
+      <a class="btn btn-primary" href="https://programsupport14.github.io/Praesto/?p=giglio" target="_blank" rel="noopener">Prenota online</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-mark"><img src="assets/logo.png" alt=""></div>
+  Pizzeria Il Giglio — Caltanissetta · Made by <a href="mailto:Programsupport14@gmail.com" style="color:inherit; text-decoration:underline;">Program Support</a>
+</footer>
+
+<script>
+(function(){
+  var disc = document.getElementById('pizzaDisc');
+  var shadow = document.getElementById('pizzaShadow');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduce){
+    var ticking = false;
+    function update(){
+      var y = window.scrollY || window.pageYOffset;
+      var rot = y * 0.55;
+      disc.style.transform = 'rotateX(66deg) rotateZ(' + rot + 'deg)';
+      var fade = Math.max(0.1, 0.5 - y / 900);
+      var scale = Math.max(0.65, 1 - y / 1500);
+      shadow.style.opacity = fade;
+      shadow.style.transform = 'scale(' + scale + ')';
+
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ window.requestAnimationFrame(update); ticking = true; }
+    }, {passive:true});
+    update();
+  }
+
+  var switchBtns = document.querySelectorAll('.switch-btn, .tab-btn');
+  var panels = { pizzeria: document.getElementById('tab-pizzeria'), ristorante: document.getElementById('tab-ristorante') };
+  function activate(target){
+    Object.keys(panels).forEach(function(k){ panels[k].hidden = (k !== target); });
+    document.querySelectorAll('.switch-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.target === target); });
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.target === target); });
+  }
+  switchBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      activate(btn.dataset.target);
+      document.querySelector('.menu-switch-zone').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+  document.querySelectorAll('[data-goto]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      activate(btn.dataset.goto);
+      document.querySelector('.menu-switch-zone').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
